@@ -102,16 +102,13 @@ def test_wrong_init():
         assert e_info == 'Unknown rule'
 
     with pytest.raises(ValueError) as e_info:
-        booking = Booking(1, 2, 3)
-        Passenger('test', booking)
+        Passenger('test', Booking(1, 2, 3))
         assert e_info == 'Unknown category'
 
     with pytest.raises(TypeError) as e_info:
-        booking = Booking(1, 2, 3)
         Passenger('adult', 'test')
         assert e_info == 'Bad arg: booking'
 
     with pytest.raises(TypeError) as e_info:
-        booking = Booking(1, 2, 3)
-        Passenger('adult', booking)
+        Passenger('adult', Booking(1, 2, 3))
         assert e_info == 'Bad arg: booking'
