@@ -1,17 +1,13 @@
 from typing import Optional, Union
 import math
 
+import const
+
 
 class Booking:
-    categories = ('adult', 'child', 'infant')
-    calculate_rules = {
-        'equal': {'adult': 1, 'child': 1, 'infant': 1},
-        'preferential': {'adult': 1, 'child': 0.6, 'infant': 0},
-    }
-
     def __init__(self, price: Union[int, float], tax: Union[int, float],
                  fee: Union[int, float], calculate_rule: str = 'equal'):
-        self._passengers_count = dict.fromkeys(self.categories, 0)
+        self._passengers_count = dict.fromkeys(const.categories, 0)
 
         self.validate_rule(calculate_rule)
         self._rule = calculate_rule
@@ -30,9 +26,9 @@ class Booking:
                or value < 0):
                 raise TypeError('Bad typed args')
 
-    @classmethod
-    def validate_rule(cls, rule: str) -> None:
-        if rule not in cls.calculate_rules.keys():
+    @staticmethod
+    def validate_rule(rule: str) -> None:
+        if rule not in const.calculate_rules.keys():
             raise ValueError('Unknown rule')
 
     def calculate_coefficients_sum(self) -> Union[int, float]:
@@ -42,8 +38,8 @@ class Booking:
         :return: sum of coefficients for all groups
         """
         return sum((
-            self.calculate_rules[self._rule][cat] * self._passengers_count[cat]
-            for cat in self.categories
+            const.calculate_rules[self._rule][cat] * self._passengers_count[cat]
+            for cat in const.categories
         ))
 
     def open_registration(self) -> None:
@@ -58,7 +54,7 @@ class Booking:
 
 class Passenger:
     def __init__(self, category: str, booking: Optional[Booking] = None):
-        if category not in Booking.categories:
+        if category not in const.categories:
             raise ValueError('Unknown category')
         self.category = category
 
@@ -94,7 +90,7 @@ class Passenger:
         """
         coef_sum = self._booking.calculate_coefficients_sum()
         single_coef_value = total / coef_sum
-        passenger_coef = self._booking.calculate_rules[self._booking._rule][
+        passenger_coef = const.calculate_rules[self._booking._rule][
             self.category
         ]
 
